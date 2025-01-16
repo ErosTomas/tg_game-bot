@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tournament Game</title>
+  <title>Турнирная игра</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -86,25 +86,32 @@
 </head>
 <body>
   <div class="game-container">
-    <h1>Tournament Game</h1>
-    <div class="player-turn">Player 1's Turn</div>
-    <div class="question">What is the capital of France?</div>
+    <h1>Турнирная игра</h1>
+    <div class="player-turn">Ход Игрока 1</div>
+    <div class="question">Какой город является столицей Франции?</div>
     <div class="answers">
-      <button class="answer-btn" data-answer="wrong">Berlin</button>
-      <button class="answer-btn" data-answer="correct">Paris</button>
-      <button class="answer-btn" data-answer="wrong">Madrid</button>
-      <button class="answer-btn" data-answer="wrong">Rome</button>
+      <button class="answer-btn" data-answer="wrong">Берлин</button>
+      <button class="answer-btn" data-answer="correct">Париж</button>
+      <button class="answer-btn" data-answer="wrong">Мадрид</button>
+      <button class="answer-btn" data-answer="wrong">Рим</button>
     </div>
-    <div class="timer">Time remaining: <span id="timer">15</span> seconds</div>
+    <div class="timer">Осталось времени: <span id="timer">15</span> секунд</div>
     <div class="results"></div>
   </div>
 
   <script>
     // Вопросы и ответы
     const questions = [
-      { question: "What is the capital of France?", answers: ["Berlin", "Paris", "Madrid", "Rome"], correct: 1 },
-      { question: "What is 2 + 2?", answers: ["3", "4", "5", "6"], correct: 1 },
-      { question: "What is the color of the sky?", answers: ["Green", "Blue", "Yellow", "Red"], correct: 1 }
+      { question: "Какое самое глубокое озеро в мире?", answers: ["Байкал", "Каспийское море", "Титикака", "Виктория"], correct: 0 },
+      { question: "Кто написал роман 'Преступление и наказание'?", answers: ["Толстой", "Достоевский", "Пушкин", "Гоголь"], correct: 1 },
+      { question: "В каком году началась Вторая мировая война?", answers: ["1935", "1939", "1941", "1945"], correct: 1 },
+      { question: "Какая планета самая большая в Солнечной системе?", answers: ["Юпитер", "Сатурн", "Земля", "Уран"], correct: 0 },
+      { question: "Сколько хромосом у человека?", answers: ["46", "48", "44", "42"], correct: 0 },
+      { question: "Какой химический элемент обозначается символом 'O'?", answers: ["Водород", "Кислород", "Углерод", "Азот"], correct: 1 },
+      { question: "Кто является автором картины 'Мона Лиза'?", answers: ["Ван Гог", "Да Винчи", "Микеланджело", "Рафаэль"], correct: 1 },
+      { question: "Как называется процесс превращения воды в пар?", answers: ["Конденсация", "Испарение", "Сублимация", "Осаждение"], correct: 1 },
+      { question: "Какая самая длинная река в мире?", answers: ["Амазонка", "Нил", "Миссисипи", "Енисей"], correct: 0 },
+      { question: "Какая страна первой отправила человека в космос?", answers: ["США", "Россия", "Китай", "Япония"], correct: 1 }
     ];
 
     let currentQuestionIndex = 0;
@@ -140,7 +147,7 @@
         answersElement.appendChild(button);
       });
 
-      playerTurnElement.textContent = `Player ${currentPlayer}'s Turn`;
+      playerTurnElement.textContent = `Ход Игрока ${currentPlayer}`;
     }
 
     // Обработка ответа
@@ -186,15 +193,15 @@
     // Завершение игры
     function endGame() {
       answersElement.innerHTML = '';
-      questionElement.textContent = 'Game Over!';
+      questionElement.textContent = 'Игра окончена!';
       playerTurnElement.textContent = '';
       const winner =
         scores[1] > scores[2]
-          ? 'Player 1 wins!'
+          ? 'Победил Игрок 1!'
           : scores[2] > scores[1]
-          ? 'Player 2 wins!'
-          : 'It\'s a tie!';
-      resultsElement.textContent = `Player 1: ${scores[1]} | Player 2: ${scores[2]} | ${winner}`;
+          ? 'Победил Игрок 2!'
+          : 'Ничья!';
+      resultsElement.textContent = `Игрок 1: ${scores[1]} | Игрок 2: ${scores[2]} | ${winner}`;
     }
 
     startGame();
