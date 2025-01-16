@@ -71,13 +71,6 @@
       font-weight: 400;
       color: #ffe3d8;
     }
-
-    .result {
-      margin-top: 20px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      color: #ffde59;
-    }
   </style>
 </head>
 <body>
@@ -85,39 +78,42 @@
     <h1>Welcome to the Game!</h1>
     <div class="question">What is the capital of France?</div>
     <div class="answers">
-      <button onclick="checkAnswer(false)">Berlin</button>
-      <button onclick="checkAnswer(true)">Paris</button>
-      <button onclick="checkAnswer(false)">Madrid</button>
-      <button onclick="checkAnswer(false)">Rome</button>
+      <button id="answer-1" class="answer-btn" data-answer="wrong">Berlin</button>
+      <button id="answer-2" class="answer-btn" data-answer="correct">Paris</button>
+      <button id="answer-3" class="answer-btn" data-answer="wrong">Madrid</button>
+      <button id="answer-4" class="answer-btn" data-answer="wrong">Rome</button>
     </div>
     <div class="timer">Time remaining: <span id="timer">15</span> seconds</div>
-    <div id="result" class="result"></div>
   </div>
 
   <script>
-    // Timer
+    const answerBtns = document.querySelectorAll('.answer-btn');
+    
+    // Слушаем нажатия кнопок
+    answerBtns.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const answer = event.target.dataset.answer;
+        
+        if (answer === 'correct') {
+          alert('Correct!');
+        } else {
+          alert('Wrong!');
+        }
+      });
+    });
+
+    // Таймер
     let timeRemaining = 15;
     const timerElement = document.getElementById('timer');
-    const resultElement = document.getElementById('result');
 
     const timerInterval = setInterval(() => {
       timeRemaining--;
       timerElement.textContent = timeRemaining;
       if (timeRemaining <= 0) {
         clearInterval(timerInterval);
-        resultElement.textContent = "Time's up! You didn't answer in time.";
+        alert("Time's up!");
       }
     }, 1000);
-
-    // Function to check the answer
-    function checkAnswer(isCorrect) {
-      clearInterval(timerInterval); // Stop timer when an answer is selected
-      if (isCorrect) {
-        resultElement.textContent = "Correct! Paris is the capital of France.";
-      } else {
-        resultElement.textContent = "Wrong answer. Try again!";
-      }
-    }
   </script>
 </body>
 </html>
