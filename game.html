@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Game</title>
+  <title>Tournament Game</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
@@ -71,49 +71,133 @@
       font-weight: 400;
       color: #ffe3d8;
     }
+
+    .player-turn {
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+
+    .results {
+      margin-top: 20px;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
   </style>
 </head>
 <body>
   <div class="game-container">
-    <h1>Welcome to the Game!</h1>
+    <h1>Tournament Game</h1>
+    <div class="player-turn">Player 1's Turn</div>
     <div class="question">What is the capital of France?</div>
     <div class="answers">
-      <button id="answer-1" class="answer-btn" data-answer="wrong">Berlin</button>
-      <button id="answer-2" class="answer-btn" data-answer="correct">Paris</button>
-      <button id="answer-3" class="answer-btn" data-answer="wrong">Madrid</button>
-      <button id="answer-4" class="answer-btn" data-answer="wrong">Rome</button>
+      <button class="answer-btn" data-answer="wrong">Berlin</button>
+      <button class="answer-btn" data-answer="correct">Paris</button>
+      <button class="answer-btn" data-answer="wrong">Madrid</button>
+      <button class="answer-btn" data-answer="wrong">Rome</button>
     </div>
     <div class="timer">Time remaining: <span id="timer">15</span> seconds</div>
+    <div class="results"></div>
   </div>
 
   <script>
-    const answerBtns = document.querySelectorAll('.answer-btn');
-    
-    // Слушаем нажатия кнопок
-    answerBtns.forEach(button => {
-      button.addEventListener('click', (event) => {
-        const answer = event.target.dataset.answer;
-        
-        if (answer === 'correct') {
-          alert('Correct!');
-        } else {
-          alert('Wrong!');
-        }
+    // Вопросы и ответы
+    const questions = [
+      { question: "What is the capital of France?", answers: ["Berlin", "Paris", "Madrid", "Rome"], correct: 1 },
+      { question: "What is 2 + 2?", answers: ["3", "4", "5", "6"], correct: 1 },
+      { question: "What is the color of the sky?", answers: ["Green", "Blue", "Yellow", "Red"], correct: 1 }
+    ];
+
+    let currentQuestionIndex = 0;
+    let currentPlayer = 1;
+    const scores = { 1: 0, 2: 0 };
+    let timeRemaining = 15;
+    let timerInterval;
+
+    const playerTurnElement = document.querySelector('.player-turn');
+    const questionElement = document.querySelector('.question');
+    const answersElement = document.querySelector('.answers');
+    const timerElement = document.getElementById('timer');
+    const resultsElement = document.querySelector('.results');
+
+    // Запуск игры
+    function startGame() {
+      loadQuestion();
+      startTimer();
+    }
+
+    // Загрузка вопроса
+    function loadQuestion() {
+      const questionData = questions[currentQuestionIndex];
+      questionElement.textContent = questionData.question;
+      answersElement.innerHTML = '';
+
+      questionData.answers.forEach((answer, index) => {
+        const button = document.createElement('button');
+        button.textContent = answer;
+        button.className = 'answer-btn';
+        button.dataset.answer = index === questionData.correct ? 'correct' : 'wrong';
+        button.addEventListener('click', handleAnswer);
+        answersElement.appendChild(button);
       });
-    });
+
+      playerTurnElement.textContent = `Player ${currentPlayer}'s Turn`;
+    }
+
+    // Обработка ответа
+    function handleAnswer(event) {
+      clearInterval(timerInterval);
+      const isCorrect = event.target.dataset.answer === 'correct';
+
+      if (isCorrect) {
+        scores[currentPlayer]++;
+      }
+
+      if (currentPlayer === 1) {
+        currentPlayer = 2; // Смена игрока
+      } else {
+        currentPlayer = 1;
+        currentQuestionIndex++; // Переход к следующему вопросу
+      }
+
+      if (currentQuestionIndex >= questions.length) {
+        endGame();
+      } else {
+        loadQuestion();
+        startTimer();
+      }
+    }
 
     // Таймер
-    let timeRemaining = 15;
-    const timerElement = document.getElementById('timer');
-
-    const timerInterval = setInterval(() => {
-      timeRemaining--;
+    function startTimer() {
+      timeRemaining = 15;
       timerElement.textContent = timeRemaining;
-      if (timeRemaining <= 0) {
-        clearInterval(timerInterval);
-        alert("Time's up!");
-      }
-    }, 1000);
+
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        timerElement.textContent = timeRemaining;
+
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          handleAnswer({ target: { dataset: { answer: 'wrong' } } }); // Если игрок не ответил
+        }
+      }, 1000);
+    }
+
+    // Завершение игры
+    function endGame() {
+      answersElement.innerHTML = '';
+      questionElement.textContent = 'Game Over!';
+      playerTurnElement.textContent = '';
+      const winner =
+        scores[1] > scores[2]
+          ? 'Player 1 wins!'
+          : scores[2] > scores[1]
+          ? 'Player 2 wins!'
+          : 'It\'s a tie!';
+      resultsElement.textContent = `Player 1: ${scores[1]} | Player 2: ${scores[2]} | ${winner}`;
+    }
+
+    startGame();
   </script>
 </body>
 </html>
